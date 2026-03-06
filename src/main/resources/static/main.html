@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<h3>API usage:</h3>
+<ul>
+    <p>Directories: /api
+    <ul>
+        <li>/customers</li>
+        <li>/policies</li>
+        <li>/claims</li>
+        <li>/payments</li>
+        <li>/coverages</li>
+    </ul>
+    </p>
+    <li><b>POST</b>
+    <p style="white-space: pre;">
+    Customer:&#9; Long id, String name, List&lt;Policy&gt; policies
+    Policy:&#9;&#9; Long id, String type, Long price, Long coverageId
+    Claim:&#9;&#9; Long id, String reason, Long amount, Long policyId, Long coverageId
+    Payment:&#9; Long id, Long amount, Long policyId
+    Coverage:&#9; Long id, Long limit
+
+    Example:
+    {
+        "id": 1,
+        "name": "Ivan Ivanov",
+        "policies": [
+            {
+                "id": 1,
+                "type": "Car insurance",
+                "price": 5000,
+                "coverageId": 1
+            }
+        ]
+    }
+    </li>
+    </p>
+    <li><b>GET, PUT, DELETE</b>
+        <p>Access any item with /api/{item}/{id}</p>
+    </li>
+</ul>
+</body>
+</html>
