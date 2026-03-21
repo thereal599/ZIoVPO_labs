@@ -7,6 +7,8 @@ import com.lab2.demo.repository.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class AppUserService {
     private final AppUserRepository userRepository;
@@ -29,6 +31,7 @@ public class AppUserService {
         AppUser user = new AppUser();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(password));
+        user.setEmail(request.getEmail());
         user.setRole(UserRole.USER);
 
         return userRepository.save(user);
@@ -44,5 +47,20 @@ public class AppUserService {
         if (!password.matches(".*\\d.*")) {
             throw new IllegalArgumentException("Password must contain at least one digit");
         }
+    }
+
+    public AppUser getByIdOrFail(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    public AppUser getByUsernameOrFail(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    public AppUser getActiveUserOrFail(UUID id) {
+        AppUser user = getByIdOrFail(id);
+        return user;
     }
 }

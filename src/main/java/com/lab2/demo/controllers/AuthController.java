@@ -30,9 +30,11 @@ public class AuthController {
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
             AppUser user = userService.register(request);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "id", user.getId(),
                     "username", user.getUsername(),
+                    "email", user.getEmail(),
                     "role", user.getRole().name()
             ));
         } catch (IllegalArgumentException ex) {

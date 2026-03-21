@@ -39,7 +39,6 @@ public class SecurityConfig {
                         .requestMatchers("/main", "/main.html").permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/refresh", "/api/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthFilter(jwt, sessionRepository), UsernamePasswordAuthenticationFilter.class);
