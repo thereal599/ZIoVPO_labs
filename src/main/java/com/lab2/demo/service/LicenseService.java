@@ -27,6 +27,7 @@ public class LicenseService {
     private final AppUserService appUserService;
     private final DeviceRepository deviceRepository;
     private final DeviceLicenseRepository deviceLicenseRepository;
+    private final SigningService signingService;
 
     public LicenseService(LicenseRepository licenseRepository,
                           LicenseHistoryRepository licenseHistoryRepository,
@@ -34,7 +35,8 @@ public class LicenseService {
                           LicenseTypeService licenseTypeService,
                           AppUserService appUserService,
                           DeviceRepository deviceRepository,
-                          DeviceLicenseRepository deviceLicenseRepository) {
+                          DeviceLicenseRepository deviceLicenseRepository,
+                          SigningService signingService) {
         this.licenseRepository = licenseRepository;
         this.licenseHistoryRepository = licenseHistoryRepository;
         this.productService = productService;
@@ -42,6 +44,7 @@ public class LicenseService {
         this.appUserService = appUserService;
         this.deviceRepository = deviceRepository;
         this.deviceLicenseRepository = deviceLicenseRepository;
+        this.signingService = signingService;
     }
 
     @Transactional
@@ -182,9 +185,11 @@ public class LicenseService {
                 .blocked(license.getBlocked())
                 .build();
 
+        String signature = signingService.sign(ticket);
+
         return TicketResponse.builder()
                 .ticket(ticket)
-                .signature("SIGNATURE_PLACEHOLDER")
+                .signature(signature)
                 .build();
     }
 
