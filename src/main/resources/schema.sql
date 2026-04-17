@@ -97,3 +97,49 @@ CREATE TABLE IF NOT EXISTS user_sessions (
     refresh_token_expiry TIMESTAMP,
     status VARCHAR(32) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS malware_signatures (
+    id UUID PRIMARY KEY,
+    threat_name VARCHAR(255) NOT NULL,
+    first_bytes_hex VARCHAR(512) NOT NULL,
+    remainder_hash_hex VARCHAR(512) NOT NULL,
+    remainder_length BIGINT NOT NULL,
+    file_type VARCHAR(100) NOT NULL,
+    offset_start BIGINT NOT NULL,
+    offset_end BIGINT NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    digital_signature_base64 TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS signatures_history (
+    history_id BIGSERIAL PRIMARY KEY,
+    signature_id UUID NOT NULL,
+    version_created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+
+    threat_name VARCHAR(255) NOT NULL,
+    first_bytes_hex VARCHAR(512) NOT NULL,
+    remainder_hash_hex VARCHAR(512) NOT NULL,
+    remainder_length BIGINT NOT NULL,
+    file_type VARCHAR(100) NOT NULL,
+    offset_start BIGINT NOT NULL,
+    offset_end BIGINT NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    digital_signature_base64 TEXT NOT NULL,
+
+    CONSTRAINT fk_signatures_history_signature
+        FOREIGN KEY (signature_id) REFERENCES malware_signatures(id)
+);
+
+CREATE TABLE IF NOT EXISTS signatures_audit (
+    audit_id BIGSERIAL PRIMARY KEY,
+    signature_id UUID NOT NULL,
+    changed_by VARCHAR(255) NOT NULL,
+    changed_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    fields_changed TEXT,
+    description TEXT NOT NULL,
+
+    CONSTRAINT fk_signatures_audit_signature
+      FOREIGN KEY (signature_id) REFERENCES malware_signatures(id)
+);

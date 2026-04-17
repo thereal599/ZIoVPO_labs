@@ -39,6 +39,20 @@ public class SecurityConfig {
                         .requestMatchers("/main", "/main.html").permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/refresh", "/api/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(
+                                "/api/signatures",
+                                "/api/signatures/increment",
+                                "/api/signatures/by-ids"
+                        ).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(
+                                "/api/signatures/*/history",
+                                "/api/signatures/*/audit",
+                                "/api/signatures/*/verify"
+                        ).hasRole("ADMIN")
+                        .requestMatchers(
+                                "/api/signatures/**"
+                        ).hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthFilter(jwt, sessionRepository), UsernamePasswordAuthenticationFilter.class);

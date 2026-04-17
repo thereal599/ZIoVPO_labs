@@ -31,4 +31,10 @@ public class GlobalExceptionHandler {
     public Map<String, String> handleBadRequest(IllegalArgumentException ex) {
         return Map.of("error", ex.getMessage());
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleInternal(IllegalStateException ex) {
+        return Map.of("error", ex.getMessage());
+    }
 }
