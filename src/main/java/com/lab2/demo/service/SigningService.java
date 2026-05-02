@@ -33,4 +33,18 @@ public class SigningService {
             throw new IllegalStateException("Failed to sign payload", ex);
         }
     }
+
+    public byte[] signBytes(byte[] bytes) {
+        try {
+            PrivateKey privateKey = keyStoreService.getPrivateKey();
+
+            Signature signature = Signature.getInstance("SHA256withRSA");
+            signature.initSign(privateKey);
+            signature.update(bytes);
+
+            return signature.sign();
+        } catch (Exception ex) {
+            throw new IllegalStateException("Failed to sign bytes", ex);
+        }
+    }
 }

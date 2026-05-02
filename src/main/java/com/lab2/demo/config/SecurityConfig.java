@@ -38,21 +38,35 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/main", "/main.html").permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/refresh", "/api/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(
+                        .requestMatchers(HttpMethod.GET,
                                 "/api/signatures",
-                                "/api/signatures/increment",
+                                "/api/signatures/increment"
+                        ).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST,
                                 "/api/signatures/by-ids"
                         ).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(
+                        .requestMatchers(HttpMethod.GET,
                                 "/api/signatures/*/history",
                                 "/api/signatures/*/audit",
                                 "/api/signatures/*/verify"
                         ).hasRole("ADMIN")
-                        .requestMatchers(
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/signatures"
+                        ).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,
                                 "/api/signatures/**"
                         ).hasRole("ADMIN")
-
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/signatures/**"
+                        ).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/binary/signatures/full",
+                                "/api/binary/signatures/increment"
+                        ).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/binary/signatures/by-ids"
+                        ).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthFilter(jwt, sessionRepository), UsernamePasswordAuthenticationFilter.class);
