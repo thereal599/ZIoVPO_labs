@@ -143,3 +143,24 @@ CREATE TABLE IF NOT EXISTS signatures_audit (
     CONSTRAINT fk_signatures_audit_signature
       FOREIGN KEY (signature_id) REFERENCES malware_signatures(id)
 );
+
+CREATE TABLE IF NOT EXISTS signature_files (
+     id UUID PRIMARY KEY,
+     signature_id UUID NOT NULL UNIQUE,
+
+     bucket_name VARCHAR(255) NOT NULL,
+     object_key VARCHAR(1024) NOT NULL UNIQUE,
+
+     original_file_name VARCHAR(512) NOT NULL,
+     content_type VARCHAR(255),
+     file_size BIGINT NOT NULL,
+     file_sha256 VARCHAR(64) NOT NULL,
+
+     uploaded_at TIMESTAMP WITH TIME ZONE NOT NULL,
+     uploaded_by VARCHAR(255) NOT NULL,
+
+     CONSTRAINT fk_signature_files_signature
+         FOREIGN KEY (signature_id)
+             REFERENCES malware_signatures(id)
+             ON DELETE RESTRICT
+);
